@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import SignUp from "./SignUp";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
+import { useScrollTrigger } from "@mui/material";
 
 function Copyright(props) {
   return (
@@ -42,6 +43,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const [e, setE] = React.useState("");
+  const [p, setP] = React.useState("");
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -51,18 +54,24 @@ export default function SignIn() {
     const password = data.get("password");
 
     try {
-      const res = await axios.post("api/v1/auth/login", { email, password });
-      if (res.data.success) {
-        toast.success(res.data.message);
-        setAuth({
-          ...auth,
-          user: res.data.user,
-          token: res.data.token,
-        });
-        localStorage.setItem("auth", JSON.stringify(res.data));
-        navigate("/");
+      if (!email || !password) {
       } else {
-        toast.error(res.data.message);
+        const res = await axios.post("api/v1/auth/login", { email, password });
+
+        if (res.data.success) {
+          toast.success(res.data.message);
+          setAuth({
+            ...auth,
+            user: res.data.user,
+            token: res.data.token,
+          });
+          localStorage.setItem("auth", JSON.stringify(res.data));
+          navigate("/");
+        } else {
+          toast.error(res.data.message);
+          setE("");
+          setP("");
+        }
       }
     } catch (error) {
       toast.error("Internal server error");
@@ -96,23 +105,27 @@ export default function SignIn() {
             >
               <TextField
                 margin="normal"
-                required
+                required={true}
                 fullWidth
                 id="email"
+                value={e}
                 label="Email Address"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={(e) => setE(e.target.value)}
               />
               <TextField
                 margin="normal"
-                required
+                required={true}
                 fullWidth
+                value={p}
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setP(e.target.value)}
               />
 
               <Button

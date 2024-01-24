@@ -6,12 +6,7 @@ import { toast } from "react-toastify";
 const HomePage = () => {
   const [auth, setAuth] = useAuth();
 
-  return (
-    <Layout>
-      <h1>Home Page</h1>
-      <pre>{JSON.stringify(auth, null, 4)}</pre>
-    </Layout>
-  );
+  return <Layout></Layout>;
 };
 
 export default HomePage;

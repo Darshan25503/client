@@ -1,0 +1,43 @@
+.pName {
+  font-size: 13px;
+}
+.productCard {
+  width: 170px !important;
+}
+.productCard button {
+  /* height: 20px; */
+  /* width: 20px; */
+}
+.productcont {
+  flex-wrap: wrap !important;
+  text-align: center;
+  justify-content: center;
+}
+.product-link {
+  text-decoration: none !important;
+  color: black !important;
+}
+.product-image {
+  height: 170px !important;
+  width: 170px !important;
+}
+
+@media (max-width: 766px) and (min-width: 150px) {
+  .productCard {
+    width: 120px !important;
+    font-size: small !important;
+  }
+  .product-image {
+    height: 119px !important;
+    width: 119px !important;
+  }
+  .prodPrice {
+    font-size: 8px;
+  }
+  #prodPriceOrg {
+    font-size: 10px !important;
+  }
+  .pName {
+    font-size: 10px;
+  }
+}

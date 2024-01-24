@@ -10,6 +10,7 @@ const CategoryForm = ({ handleSubmit, value, setValue, x }) => {
             className="form-control "
             placeholder="Enter new Category"
             value={value}
+            required
             onChange={(e) => setValue(e.target.value)}
           />
           <input

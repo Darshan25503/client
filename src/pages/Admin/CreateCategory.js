@@ -34,8 +34,9 @@ const CreateCategory = () => {
       const x = localStorage.getItem("auth");
       console.log(x);
       if (data?.success) {
-        toast.success("Category created sucessfully");
+        toast.success(data.message);
         getAllCategory();
+        setName("");
       }
     } catch (error) {
       console.log(error);

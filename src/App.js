@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -6,7 +7,6 @@ import Policy from "./pages/Policy";
 import Pagenotfound from "./pages/Pagenotfound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/user/Dashboard";
 import PrivateRoute from "./components/routes/Private";
@@ -17,8 +17,32 @@ import CreateProduct from "./pages/Admin/CreateProduct";
 import Users from "./pages/Admin/Users";
 import Orders from "./pages/user/Orders";
 import Profile from "./pages/user/Profile";
+import Products from "./pages/Admin/Products";
+import UpdateProduct from "./pages/Admin/UpdateProduct";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
+  const [loading, setLoading] = useState(false);
+
+  // Simulate API call with useEffect
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      // Your API call logic goes here
+      // For example, use axios or fetch to make API calls
+      try {
+        // Simulate API call delay
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // Your API call success logic
+      } catch (error) {
+        // Your API call error handling logic
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <Routes>
@@ -32,6 +56,8 @@ function App() {
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
+          <Route path="admin/product/:slug" element={<UpdateProduct />} />
+          <Route path="admin/products" element={<Products />} />
           <Route path="admin/users" element={<Users />} />
         </Route>
         <Route path="/about" element={<About />} />
