@@ -19,34 +19,18 @@ import Orders from "./pages/user/Orders";
 import Profile from "./pages/user/Profile";
 import Products from "./pages/Admin/Products";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
-import LoadingSpinner from "./components/LoadingSpinner";
+import Category from "./components/Category";
+import Search from "./pages/Search";
+import ProductDetail from "./pages/ProductDetail";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-
-  // Simulate API call with useEffect
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      // Your API call logic goes here
-      // For example, use axios or fetch to make API calls
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        // Your API call success logic
-      } catch (error) {
-        // Your API call error handling logic
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/product/:slug" element={<ProductDetail />} />
+        <Route path="/category" element={<Category />} />
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/orders" element={<Orders />} />

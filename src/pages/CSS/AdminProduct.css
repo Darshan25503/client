@@ -1,8 +1,8 @@
 .pName {
-  font-size: 13px;
+  font-size: 14px;
 }
 .productCard {
-  width: 170px !important;
+  width: 190px !important;
 }
 .productCard button {
   /* height: 20px; */
@@ -18,8 +18,11 @@
   color: black !important;
 }
 .product-image {
-  height: 170px !important;
-  width: 170px !important;
+  height: 230px !important;
+  width: 188.5px !important;
+}
+.prodPrice {
+  font-size: 12px;
 }
 
 @media (max-width: 766px) and (min-width: 150px) {

@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../Images/png/Snowbizz.png";
 import { useAuth } from "../../context/auth";
+import SearchInput from "../Form/SearchInput";
 const Header = () => {
   const [auth, setAuth] = useAuth();
   const handleLogout = () => {
@@ -32,6 +33,9 @@ const Header = () => {
 
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li className="nav-item mx-2 mt-1 ">
+                <SearchInput />
+              </li>
               {!auth.user ? (
                 <>
                   {" "}
@@ -107,6 +111,7 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
+
               <li className="nav-item">
                 <NavLink className="nav-link mx-2" to="/category">
                   Category
