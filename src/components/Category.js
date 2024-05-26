@@ -192,7 +192,7 @@ const Category = () => {
                       <p className="card-title pName ">{p.name}</p>
                       {/* <p className="card-text">{p.description}</p> */}
                       <p className="card-text">
-                        <sup className="text-danger prodPrice">-80%</sup>{" "}
+                        <sup className="text-danger prodPrice">-40%</sup>{" "}
                         <span className="h5 " id="prodPriceOrg">
                           {" "}
                           &#8377;
@@ -202,7 +202,7 @@ const Category = () => {
                         <span>
                           <s className="prodPrice">
                             {" "}
-                            &#8377;{Math.round((p.price * 100) / 20)}
+                            &#8377;{Math.round((p.price * 100) / 60)}
                           </s>
                         </span>
                       </p>

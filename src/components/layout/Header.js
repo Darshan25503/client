@@ -1,10 +1,15 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../../Images/png/Snowbizz.png";
 import { useAuth } from "../../context/auth";
 import SearchInput from "../Form/SearchInput";
+import useCategory from "../../Hooks/useCategory";
+import { useCart } from "../../context/cart";
+import { Badge } from "antd";
 const Header = () => {
   const [auth, setAuth] = useAuth();
+  const [cart] = useCart();
+  const categories = useCategory();
   const handleLogout = () => {
     setAuth({
       ...auth,
@@ -39,27 +44,27 @@ const Header = () => {
               {!auth.user ? (
                 <>
                   {" "}
-                  <li class="nav-item dropdown">
+                  <li className="nav-item dropdown">
                     <a
-                      class="nav-link dropdown-toggle"
+                      className="nav-link dropdown-toggle"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul className="dropdown-menu">
                       <li className="nav-item">
                         <NavLink className="nav-link mx-2" to="/signup">
-                          <i class="fa-solid fa-user-pen fa-bounce"></i>{" "}
+                          <i className="fa-solid fa-user-pen fa-bounce"></i>{" "}
                           &nbsp;Register
                         </NavLink>
                       </li>
 
                       <li>
                         <NavLink className="nav-link mx-2" to="/login">
-                          <i class="fa-solid fa-user-check fa-bounce text-success"></i>{" "}
+                          <i className="fa-solid fa-user-check fa-bounce text-success"></i>{" "}
                           &nbsp; Login
                         </NavLink>
                       </li>
@@ -69,19 +74,19 @@ const Header = () => {
               ) : (
                 <>
                   {" "}
-                  <li class="nav-item dropdown">
+                  <li className="nav-item dropdown">
                     <a
-                      class="nav-link dropdown-toggle"
+                      className="nav-link dropdown-toggle"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                       &nbsp;
                       {auth?.user?.name}
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul className="dropdown-menu">
                       <li>
                         <NavLink
                           className="nav-link mx-2"
@@ -98,7 +103,7 @@ const Header = () => {
                           onClick={handleLogout}
                           to="/login"
                         >
-                          <i class="fa-solid fa-user-xmark text-danger fa-fade"></i>{" "}
+                          <i className="fa-solid fa-user-xmark text-danger fa-fade"></i>{" "}
                           &nbsp; LogOut{" "}
                         </NavLink>
                       </li>
@@ -111,15 +116,41 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
+              <li className="nav-item dropdown">
+                <Link
+                  className="nav-link dropdown-toggle"
+                  to="/categories"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Categories
+                </Link>
+                <ul className="dropdown-menu">
+                  {categories.map((c) => (
+                    <li key={c.id}>
+                      <Link
+                        className="dropdown-item"
+                        to={`/category/${c.slug}`}
+                      >
+                        {c.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
 
               <li className="nav-item">
-                <NavLink className="nav-link mx-2" to="/category">
-                  Category
-                </NavLink>
-              </li>
-              <li className="nav-item">
                 <NavLink className="nav-link mx-2" to="/cart">
-                  <i class="fa-solid fa-cart-shopping"></i> (0)
+                  <i className="fa-solid fa-cart-shopping">
+                    <Badge
+                      count={cart.length}
+                      size="small"
+                      title="your cart"
+                      className=""
+                      offset={[0, -20]}
+                    ></Badge>
+                  </i>
                 </NavLink>
               </li>
             </ul>

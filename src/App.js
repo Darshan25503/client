@@ -22,6 +22,9 @@ import UpdateProduct from "./pages/Admin/UpdateProduct";
 import Category from "./components/Category";
 import Search from "./pages/Search";
 import ProductDetail from "./pages/ProductDetail";
+import CategoryProduct from "./pages/CategoryProduct";
+import CartPage from "./pages/CartPage";
+import DemoCart from "./pages/DemoCart";
 
 function App() {
   return (
@@ -30,7 +33,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/product/:slug" element={<ProductDetail />} />
-        <Route path="/category" element={<Category />} />
+        <Route path="/category/all-categories" element={<Category />} />
+        <Route path="/cart" element={<DemoCart />} />
+        <Route path="/category/:slug" element={<CategoryProduct />} />
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/orders" element={<Orders />} />
@@ -44,11 +49,13 @@ function App() {
           <Route path="admin/products" element={<Products />} />
           <Route path="admin/users" element={<Users />} />
         </Route>
+
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/democart" element={<DemoCart />} />
         <Route path="*" element={<Pagenotfound />} />
       </Routes>
     </>
