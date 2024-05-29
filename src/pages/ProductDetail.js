@@ -125,6 +125,7 @@ const ProductDetail = () => {
 
                     // If size is selected, proceed with adding to cart
                     setCart([...cart, p]);
+                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
                     toast.success("Item Added to Cart");
                     setSelectedSize("");
                   }}

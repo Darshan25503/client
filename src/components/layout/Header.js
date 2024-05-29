@@ -6,6 +6,7 @@ import SearchInput from "../Form/SearchInput";
 import useCategory from "../../Hooks/useCategory";
 import { useCart } from "../../context/cart";
 import { Badge } from "antd";
+
 const Header = () => {
   const [auth, setAuth] = useAuth();
   const [cart] = useCart();
@@ -41,9 +42,8 @@ const Header = () => {
               <li className="nav-item mx-2 mt-1 ">
                 <SearchInput />
               </li>
-              {!auth.user ? (
+              {!auth.token ? (
                 <>
-                  {" "}
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle"
@@ -73,7 +73,6 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  {" "}
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle"
@@ -139,20 +138,21 @@ const Header = () => {
                   ))}
                 </ul>
               </li>
-
-              <li className="nav-item">
-                <NavLink className="nav-link mx-2" to="/cart">
-                  <i className="fa-solid fa-cart-shopping">
-                    <Badge
-                      count={cart.length}
-                      size="small"
-                      title="your cart"
-                      className=""
-                      offset={[0, -20]}
-                    ></Badge>
-                  </i>
-                </NavLink>
-              </li>
+              {auth.token && (
+                <li className="nav-item">
+                  <NavLink className="nav-link mx-2" to="/cart">
+                    <i className="fa-solid fa-cart-shopping">
+                      <Badge
+                        count={cart.length}
+                        size="small"
+                        title="your cart"
+                        className=""
+                        offset={[0, -20]}
+                      ></Badge>
+                    </i>
+                  </NavLink>
+                </li>
+              )}
             </ul>
           </div>
         </div>

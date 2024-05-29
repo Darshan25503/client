@@ -1,17 +1,43 @@
-// src/components/CartPage.js
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Modal,
+} from "react-bootstrap";
 import "./CSS/DemoCart.css";
-import { MdDelete } from "react-icons/md";
 import { useCart } from "../context/cart";
 import Layout from "../components/layout/Layout";
+import { useAuth } from "../context/auth";
+import { useNavigate } from "react-router-dom";
+import DropIn from "braintree-web-drop-in-react";
+import axios from "axios";
 
 const DemoCart = () => {
   const [cart, setCart] = useCart();
   const [cartItems, setCartItems] = useState([]);
+  const [auth] = useAuth();
+  const [clientToken, setClientToken] = useState("");
+  const [instance, setInstance] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
-  // Combine items with the same _id and sum their quantities
+  const getToken = async () => {
+    try {
+      const response = await axios.get("/api/v1/products/braintree-token");
+      setClientToken(response?.data?.response?.clientToken);
+      console.log("Client token:", response?.data?.response?.clientToken);
+    } catch (error) {
+      console.error("Error fetching client token:", error);
+    }
+  };
+
   useEffect(() => {
+    getToken();
     const combinedItems = cart.reduce((acc, item) => {
       if (acc[item._id]) {
         acc[item._id].quantity += 1;
@@ -34,7 +60,15 @@ const DemoCart = () => {
   };
 
   const handleRemoveItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item._id !== id));
+    try {
+      let myCart = [...cart];
+      let index = myCart.findIndex((item) => item._id === id);
+      myCart.splice(index, 1);
+      setCart(myCart);
+      localStorage.setItem("cart", JSON.stringify(myCart));
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
   };
 
   const getTotalPrice = () => {
@@ -43,6 +77,47 @@ const DemoCart = () => {
       0
     );
   };
+
+  const handlePayment = async () => {
+    if (!instance) return;
+
+    try {
+      const token = localStorage.getItem("auth");
+      const t = JSON.parse(token);
+      setLoading(true);
+      const { nonce } = await instance.requestPaymentMethod();
+      const total = getTotalPrice();
+      console.log(total);
+
+      const response = await axios.post(
+        "/api/v1/products/braintree-payment",
+        {
+          nonce,
+          cart,
+          total,
+        },
+        {
+          headers: {
+            authtoken: t.token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Payment response:", response.data);
+      // setCart(null);
+      setLoading(false);
+      navigate("/dashboard/user/orders");
+    } catch (error) {
+      console.error("Payment error:", error);
+      setLoading(false);
+    }
+  };
+
+  if (!auth?.token) {
+    navigate("/login");
+    return "Redirecting to login...";
+  }
 
   return (
     <Layout>
@@ -98,7 +173,7 @@ const DemoCart = () => {
                           className="m-2 btn-sm text-center"
                           onClick={() => handleRemoveItem(item._id)}
                         >
-                          Delete
+                          Remove
                         </Button>
                       </div>
                     </Card.Body>
@@ -112,12 +187,44 @@ const DemoCart = () => {
               <h3>Order Summary</h3>
               <p>Total Items: {cartItems.length}</p>
               <p>Total Price: &#8377; {getTotalPrice()}</p>
-              <Button variant="outline-success" className="mt-3" block>
-                Proceed to Checkout
+              <Button
+                variant="outline-success"
+                className="mt-3"
+                block
+                onClick={() => setShowModal(true)}
+                disabled={!clientToken || loading}
+              >
+                {loading ? "Processing..." : "Proceed to Checkout"}
               </Button>
             </div>
           </Col>
         </Row>
+
+        <Modal show={showModal} onHide={() => setShowModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Complete Payment</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {clientToken && (
+              <DropIn
+                options={{ authorization: clientToken }}
+                onInstance={(instance) => setInstance(instance)}
+              />
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handlePayment}
+              disabled={loading || !instance}
+            >
+              {loading ? "Processing..." : `Pay Now (₹${getTotalPrice()})`}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </Layout>
   );
